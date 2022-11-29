@@ -6,5 +6,5 @@ import com.orels.samples.todo.domain.model.Task
 
 @androidx.room.Database(entities = [Task::class], version = 2)
 abstract class LocalDatabase : RoomDatabase() {
-    abstract fun todoDao(): TodoDao
+    abstract fun taskDao(): TodoDao
 }

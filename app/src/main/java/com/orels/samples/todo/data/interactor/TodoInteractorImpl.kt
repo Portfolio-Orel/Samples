@@ -14,7 +14,7 @@ class TodoInteractorImpl @Inject constructor(
     private val todoRepository: TodoRepository, localDatabase: LocalDatabase,
 ) : TodoInteractor {
 
-    private val db = localDatabase.todoDao()
+    private val db = localDatabase.taskDao()
 
     override fun insert(task: Task): Single<Result<Task>> =
         todoRepository.insert(task).subscribeOn(Schedulers.io()).flatMap { id ->

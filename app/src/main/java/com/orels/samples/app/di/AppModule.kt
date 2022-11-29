@@ -47,7 +47,7 @@ object AppModule {
         rxAdapter: RxJava3CallAdapterFactory,
         okHttpClient: OkHttpClient,
         gson: Gson,
-        @BaseUrl url: String
+        @BaseUrl url: String,
     ): API =
         Retrofit.Builder()
             .client(okHttpClient)
@@ -62,11 +62,14 @@ object AppModule {
     @Provides
     @Singleton
     fun provideLocalDatabase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): LocalDatabase = Room.databaseBuilder(
         context,
         LocalDatabase::class.java,
         "todo_db"
-    ).build()
+    )
+        .fallbackToDestructiveMigration()
+        .build()
+
     // _TODO
 }
