@@ -16,7 +16,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.orels.rx_weather.presentation.weather.WeatherScreen
+import com.orels.samples.todo.presentation.todo.TodoScreen
 import com.orels.samples.ui.theme.SamplesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,7 +59,8 @@ class MainActivity : ComponentActivity() {
             Surface(
                 modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
             ) {
-                WeatherScreen()
+//                WeatherScreen()
+                TodoScreen()
             }
         }
     }

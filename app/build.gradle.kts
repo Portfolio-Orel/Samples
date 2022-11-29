@@ -83,6 +83,7 @@ dependencies {
     // Rx
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.squareup.retrofit2:adapter-rxjava3:2.9.0")
+    implementation ("io.reactivex.rxjava3:rxandroid:3.0.2")
 
     // Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.21.1-beta")
