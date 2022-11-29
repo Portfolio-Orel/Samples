@@ -33,31 +33,33 @@ class TodoViewModel @Inject constructor(
     private fun getTodos() {
         state = state.copy(isLoading = true)
         interactor.getAll().observeOn(AndroidSchedulers.mainThread()).subscribe({ tasks ->
-            state = state.copy(tasks = tasks.getOrNull() ?: emptyList(), isLoading = false)
-        }, { error ->
-            state = state.copy(error = error.message ?: "", isLoading = false)
-        })
+                state = state.copy(tasks = tasks.getOrNull() ?: emptyList(), isLoading = false)
+            }, { error ->
+                state = state.copy(error = error.message ?: "", isLoading = false)
+            })
     }
 
     private fun addTask(task: Task) {
         interactor.insert(task).observeOn(AndroidSchedulers.mainThread()).subscribe({
-            state = state.copy(tasks = state.tasks + task)
-        }, { error ->
-            state = state.copy(error = error.message ?: "", isLoading = false)
-        })
+                state = state.copy(tasks = state.tasks + task)
+            }, { error ->
+                state = state.copy(error = error.message ?: "", isLoading = false)
+            })
     }
 
     private fun removeTask(task: Task) {
-        interactor.delete(task).observeOn(AndroidSchedulers.mainThread()).doOnComplete {
-            state = state.copy(tasks = state.tasks - task)
-        }.subscribe()
+        interactor.delete(task).observeOn(AndroidSchedulers.mainThread()).subscribe({
+                state = state.copy(tasks = state.tasks - task)
+            }, { error ->
+                state = state.copy(error = error.message ?: "", isLoading = false)
+            })
     }
 
     private fun updateTask(task: Task) {
         interactor.update(task).observeOn(AndroidSchedulers.mainThread()).subscribe({
-            state = state.copy(tasks = state.tasks.map { if (it.id == task.id) task else it })
-        }, { error ->
-            state = state.copy(error = error.message ?: "", isLoading = false)
-        })
+                state = state.copy(tasks = state.tasks.map { if (it.id == task.id) task else it })
+            }, { error ->
+                state = state.copy(error = error.message ?: "", isLoading = false)
+            })
     }
 }

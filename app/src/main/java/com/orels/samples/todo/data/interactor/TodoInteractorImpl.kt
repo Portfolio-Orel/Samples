@@ -19,18 +19,24 @@ class TodoInteractorImpl @Inject constructor(
     override fun insert(task: Task): Single<Result<Task>> =
         todoRepository.insert(task).subscribeOn(Schedulers.io()).flatMap { id ->
             task.id = id
-            db.insert(task).subscribeOn(Schedulers.io())
-                .toSingleDefault(Result.success(task))
+            db.insert(task).subscribeOn(Schedulers.io()).toSingleDefault(Result.success(task))
         }.onErrorReturn {
             Result.failure(it)
         }
 
 
     override fun update(task: Task): Completable =
-        todoRepository.update(task).subscribeOn(Schedulers.io()).doOnComplete { db.update(task) }
+        todoRepository.update(task).subscribeOn(Schedulers.io()).doOnComplete {
+            db.update(task)
+                .subscribe()
+        }
 
     override fun delete(task: Task): Completable =
-        todoRepository.delete(task).subscribeOn(Schedulers.io()).doOnComplete { db.delete(task.id) }
+// Delete from remote and then delete from local and return a completable
+        todoRepository.delete(task).subscribeOn(Schedulers.io()).doOnComplete {
+            db.delete(task.id)
+                .subscribe()
+        }
 
 
     override fun getAll(): Flowable<Result<List<Task>>> =
