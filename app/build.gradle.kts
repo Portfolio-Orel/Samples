@@ -90,6 +90,16 @@ dependencies {
     // Status Bar
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
 
+    // TODO
+    // Room
+    val room_version = "2.4.3"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-rxjava3:$room_version")
+
+    // TODO
+
     api(project(":components"))
     api(project(":rx_weather"))
 
