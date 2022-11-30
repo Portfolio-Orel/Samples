@@ -2,6 +2,7 @@ package com.orels.samples.book_notes.data.local.dao
 
 import androidx.room.*
 import com.orels.samples.book_notes.domain.model.BookNote
+import com.orels.samples.book_notes.domain.model.BookNotes
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
@@ -14,6 +15,9 @@ interface BookNoteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(bookNote: BookNote): Completable
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(bookNote: BookNotes): Completable
 
     @Update
     fun update(bookNote: BookNote): Completable

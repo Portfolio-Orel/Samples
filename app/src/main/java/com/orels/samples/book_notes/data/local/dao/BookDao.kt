@@ -2,6 +2,7 @@ package com.orels.samples.book_notes.data.local.dao
 
 import androidx.room.*
 import com.orels.samples.book_notes.domain.model.Book
+import com.orels.samples.book_notes.domain.model.Books
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -16,7 +17,7 @@ interface BookDao {
     fun get(id: String): Maybe<Book>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(books: List<Book>): Completable
+    fun insert(books: Books): Completable
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(book: Book): Completable

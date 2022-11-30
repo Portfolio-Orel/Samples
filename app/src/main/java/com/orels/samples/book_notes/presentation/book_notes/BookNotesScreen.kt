@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,16 +28,6 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
             }, onUpdate = { task ->
                 viewModel.onEvent(BookNoteEvent.UpdateBookNote(task))
             })
-            Button(onClick = {
-                viewModel.onEvent(BookNoteEvent.AddBookNote(BookNote(id = "${state.bookNoteItems.size + 1}",
-                    bookId = "First book",
-                    note = "This is the first note ${System.currentTimeMillis()}",
-                    page = 43,
-                    createdAt = System.currentTimeMillis(),
-                    isActive = true)))
-            }) {
-
-            }
         }
     }
 }
