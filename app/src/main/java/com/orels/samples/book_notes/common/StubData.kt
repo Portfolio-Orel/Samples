@@ -36,6 +36,7 @@ object StubData {
         BookNote(
             id = "$it",
             bookId = books.random().id,
+            title = "Title $it",
             note = "Note $it",
             page = 43,
             createdAt = System.currentTimeMillis(),
