@@ -10,6 +10,7 @@ import com.orels.samples.book_notes.domain.model.BookNote
 import com.orels.samples.book_notes.presentation.book_notes.model.BookNotesItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.kotlin.zipWith
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +18,7 @@ class BookNotesViewModel @Inject constructor(
     private val booksInteractor: BooksInteractor,
     private val bookNotesInteractor: BookNotesInteractor,
 ) : ViewModel() {
-    var state by mutableStateOf(BookNoteSState())
+    var state by mutableStateOf(BookNotesState())
         private set
 
     init {
@@ -33,24 +34,28 @@ class BookNotesViewModel @Inject constructor(
         }
     }
 
-    private fun setNewState(state: BookNoteSState) {
+    private fun setNewState(state: BookNotesState) {
         this.state = state
     }
 
     private fun getData() {
         state = state.copy(isLoading = true)
-        booksInteractor.getAll().zipWith(bookNotesInteractor.getAll()) { books, bookNotes ->
-            books.map { book ->
-                BookNotesItem(book = book)
-            }.map { bookNotesItem ->
-                bookNotesItem.copy(bookNotes = bookNotes.getOrNull()
-                    ?.filter { it.bookId == bookNotesItem.book?.id } ?: emptyList())
-            }
-        }.observeOn(AndroidSchedulers.mainThread()).subscribe({ bookNoteItems ->
-            setNewState(state.copy(bookNoteItems = bookNoteItems, isLoading = false))
-        }, { error ->
-            setNewState(state.copy(error = error.message ?: "", isLoading = false))
-        })
+        booksInteractor.getAll().zipWith(bookNotesInteractor.getAll())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ (books, bookNotes) ->
+                val bookNotesItems = books.map { book ->
+                    BookNotesItem(book = book)
+                }
+                val bookNotesItemsWithNotes = bookNotesItems.map { bookNotesItem ->
+                    val bookNotesForBook = bookNotes.getOrNull()?.filter { bookNote ->
+                        bookNote.bookId == bookNotesItem.book?.id
+                    }
+                    bookNotesItem.copy(bookNotes = bookNotesForBook ?: emptyList())
+                }
+                setNewState(state.copy(bookNoteItems = bookNotesItemsWithNotes, isLoading = false))
+            }, { error ->
+                setNewState(state.copy(error = error.message ?: "", isLoading = false))
+            })
     }
 
     private fun addBookNotes(bookNote: BookNote) =
@@ -70,7 +75,8 @@ class BookNotesViewModel @Inject constructor(
         bookNotesInteractor.delete(bookNote).observeOn(AndroidSchedulers.mainThread()).subscribe({
             setNewState(state.copy(bookNoteItems = state.bookNoteItems.map { bookNoteItem ->
                 if (bookNoteItem.book?.id == bookNote.bookId) {
-                    bookNoteItem.copy(bookNotes = bookNoteItem.bookNotes - bookNote)
+                    val newBookNotes = bookNoteItem.bookNotes.filter { it.id != bookNote.id }
+                    bookNoteItem.copy(bookNotes = newBookNotes)
                 } else {
                     bookNoteItem
                 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
         Loading(size = 16.dp, width = 2.dp)
     } else {
         Column {
+
             BookNotesList(bookNotes = state.bookNoteItems, onDelete = { task ->
                 viewModel.onEvent(BookNoteEvent.RemoveBookNote(task))
             }, onUpdate = { task ->
@@ -30,7 +32,7 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
             Button(onClick = {
                 viewModel.onEvent(BookNoteEvent.AddBookNote(BookNote(id = "${state.bookNoteItems.size + 1}",
                     bookId = "First book",
-                    note = "This is the first note",
+                    note = "This is the first note ${System.currentTimeMillis()}",
                     page = 43,
                     createdAt = System.currentTimeMillis(),
                     isActive = true)))
@@ -49,6 +51,10 @@ fun BookNotesList(
 ) {
     Column() {
         bookNotes.forEach { bookNotesItem ->
+            Text(
+                text = bookNotesItem.book?.title ?: "Book",
+                style = MaterialTheme.typography.titleLarge
+            )
             BookNoteItemComponent(bookNotesItem = bookNotesItem,
                 onDelete = onDelete,
                 onUpdate = onUpdate)

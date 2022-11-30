@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 
 
+typealias BookNotes = List<BookNote>
+
 /**
  * A book note
  * @param id the id of the book note

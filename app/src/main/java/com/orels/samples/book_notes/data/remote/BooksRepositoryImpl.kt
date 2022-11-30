@@ -12,7 +12,7 @@ class BooksRepositoryImpl @Inject constructor() : BooksRepository {
 
     override fun get(id: String): Maybe<Book> = Maybe.empty()
 
-    override fun insert(book: Book): Single<String> = Single.just("")
+    override fun insert(book: Book): Single<String> = Single.just("First book")
 
     override fun update(book: Book): Completable = Completable.complete()
 
