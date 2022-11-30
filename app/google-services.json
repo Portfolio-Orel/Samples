@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "442544807853",
+    "project_id": "books-notes-efee2",
+    "storage_bucket": "books-notes-efee2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442544807853:android:c129635823a26563d3cb24",
+        "android_client_info": {
+          "package_name": "com.orels.samples.book_notes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442544807853-pevr80d05314idjeq59cu738opmt63co.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orels.samples.book_notes",
+            "certificate_hash": "f324263bd2f85f3a201cc587f9d67334802b323a"
+          }
+        },
+        {
+          "client_id": "442544807853-cjs3cl6hk5nd5nie25u25bif774ngbv0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA04vPz3M0duSV44NShAF4GtFqgndko_dQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442544807853-cjs3cl6hk5nd5nie25u25bif774ngbv0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

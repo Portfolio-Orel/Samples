@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -91,7 +92,7 @@ dependencies {
     // Status Bar
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
 
-    // TODO
+    // Book Notes
     // Room
     val room_version = "2.4.3"
     implementation("androidx.room:room-runtime:$room_version")
@@ -99,7 +100,14 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-rxjava3:$room_version")
 
-    // TODO
+    // Book Notes
+
+    // Auth
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:31.1.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    // Auth
 
     api(project(":components"))
     api(project(":rx_weather"))

@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.orels.samples.book_notes.common.StubData
 import com.orels.samples.book_notes.domain.interactor.BookNotesInteractor
 import com.orels.samples.book_notes.domain.interactor.BooksInteractor
 import com.orels.samples.book_notes.domain.model.BookNote
@@ -22,6 +23,12 @@ class BookNotesViewModel @Inject constructor(
         private set
 
     init {
+        StubData.books.forEach {
+            booksInteractor.insert(it).subscribe()
+        }
+        StubData.bookNotes.forEach {
+            bookNotesInteractor.insert(it).subscribe()
+        }
         getData()
     }
 
