@@ -16,7 +16,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.orels.samples.todo.presentation.todo.TodoScreen
+import com.orels.samples.book_notes.presentation.book_notes.TodoScreen
 import com.orels.samples.ui.theme.SamplesTheme
 import dagger.hilt.android.AndroidEntryPoint
 

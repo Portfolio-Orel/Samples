@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.orels.rx_weather.data.remote.API
 import com.orels.samples.app.annotation.BaseUrl
-import com.orels.samples.todo.data.local.LocalDatabase
+import com.orels.samples.book_notes.data.local.LocalDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,7 +58,7 @@ object AppModule {
             .create(API::class.java)
     // RX_WEATHER
 
-    // _TODO
+    // BookNotes
     @Provides
     @Singleton
     fun provideLocalDatabase(
@@ -66,10 +66,10 @@ object AppModule {
     ): LocalDatabase = Room.databaseBuilder(
         context,
         LocalDatabase::class.java,
-        "todo_db"
+        "book_notes_db"
     )
         .fallbackToDestructiveMigration()
         .build()
 
-    // _TODO
+    // BookNotes
 }
