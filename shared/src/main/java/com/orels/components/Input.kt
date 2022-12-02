@@ -1,16 +1,13 @@
 package com.orels.components
 
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,9 +46,20 @@ fun Input(
 ) {
     val value = remember { mutableStateOf(defaultValue) }
     val passwordVisible = rememberSaveable { mutableStateOf(false) }
-    val lineHeight = 40
+    val lineHeight = 25
     val focusRequester = FocusRequester()
     val widthPerCharacter = 20
+
+    val minHeight = if (minLines > 1) {
+        lineHeight * minLines
+    } else {
+        lineHeight * 2
+    }
+    val maxHeight = if (maxLines > 1) {
+        lineHeight * maxLines
+    } else {
+        lineHeight * 2
+    }
 
     val inputModifier = if (shouldFocus) Modifier.focusRequester(focusRequester) else Modifier
 
@@ -60,6 +68,7 @@ fun Input(
         Text(title)
         Box(modifier = inputModifier.zIndex(1f)) {
             OutlinedTextField(modifier = Modifier
+                .heightIn(min = minHeight.dp, max = maxHeight.dp)
                 .fillMaxWidth()
                 .focusable(enabled = shouldFocus),
                 value = value.value,

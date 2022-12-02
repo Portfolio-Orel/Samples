@@ -16,4 +16,5 @@
     <string name="book_title">Book Title</string>
     <string name="the_lord_of_the_rings">The Lord of the Rings</string>
     <string name="add">Add</string>
+    <string name="main_fab">Main Fab</string>
 </resources>
