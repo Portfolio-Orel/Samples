@@ -1,5 +1,10 @@
 package com.orels.samples.book_notes.data.remote
 
+import com.google.firebase.firestore.FirebaseFirestore
+import com.orels.samples.book_notes.data.model.fromMapBook
+import com.orels.samples.book_notes.data.model.toDelete
+import com.orels.samples.book_notes.data.model.toInsert
+import com.orels.samples.book_notes.data.model.toUpdate
 import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.Books
 import com.orels.samples.book_notes.domain.repository.BooksRepository
@@ -9,15 +14,111 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class BooksRepositoryImpl @Inject constructor() : BooksRepository {
-    override fun getAll(): Single<List<Book>> = Single.just(listOf())
 
-    override fun get(id: String): Maybe<Book> = Maybe.empty()
+    private val db = FirebaseFirestore.getInstance()
 
-    override fun insert(book: Book): Single<String> = Single.just(book.id)
+    override fun getAll(): Single<Books> =
+        Single.create { emitter ->
+            db.collection("user")
+                .document("orel")
+                .collection("books")
+                .whereEqualTo("isActive", true)
+                .get()
+                .addOnSuccessListener { result ->
+                    val books = mutableListOf<Book>()
+                    for (document in result) {
+                        books.add(fromMapBook(document.data, document.id))
+                    }
+                    emitter.onSuccess(books)
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onError(exception)
+                }
+        }
 
-    override fun insert(books: Books): Single<List<String>> = Single.just(books.map { it.id })
+    override fun get(id: String): Maybe<Book> =
+        Maybe.create { emitter ->
+            db.collection("user")
+                .document("orel")
+                .collection("books")
+                .document(id)
+                .get()
+                .addOnSuccessListener { result ->
+                    val book = result.data?.let {
+                        fromMapBook(it, result.id)
+                    }
+                    if (book != null) {
+                        emitter.onSuccess(book)
+                    } else {
+                        emitter.onComplete()
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onError(exception)
+                }
+        }
 
-    override fun update(book: Book): Completable = Completable.complete()
+    override fun insert(book: Book): Single<String> =
+        Single.create { emitter ->
+            db.collection("user")
+                .document("orel")
+                .collection("books")
+                .add(book.toInsert())
+                .addOnSuccessListener { documentReference ->
+                    emitter.onSuccess(documentReference.id)
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onError(exception)
+                }
+        }
 
-    override fun delete(book: Book): Completable = Completable.complete()
+    override fun insert(books: Books): Single<List<String>> =
+        Single.create { emitter ->
+            val ids = mutableListOf<String>()
+            for (book in books) {
+                db.collection("user")
+                    .document("orel")
+                    .collection("books")
+                    .add(book.toInsert())
+                    .addOnSuccessListener { documentReference ->
+                        ids.add(documentReference.id)
+                        if (ids.size == books.size) {
+                            emitter.onSuccess(ids)
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        emitter.onError(exception)
+                    }
+            }
+        }
+
+    override fun update(book: Book): Completable =
+        Completable.create { emitter ->
+            db.collection("user")
+                .document("orel")
+                .collection("books")
+                .document(book.id)
+                .update(book.toUpdate())
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onError(exception)
+                }
+        }
+
+    override fun delete(book: Book): Completable =
+        Completable.create { emitter ->
+            db.collection("user")
+                .document("orel")
+                .collection("books")
+                .document(book.id)
+                .update(book.toDelete())
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }
+                .addOnFailureListener { exception ->
+                    emitter.onError(exception)
+                }
+        }
 }

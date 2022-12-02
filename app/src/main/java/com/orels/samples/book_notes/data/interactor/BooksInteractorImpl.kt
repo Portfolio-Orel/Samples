@@ -22,7 +22,8 @@ class BooksInteractorImpl @Inject constructor(
         .subscribeOn(Schedulers.io())
         .flatMap { books: List<Book> ->
             if (books.isEmpty()) {
-                repository.getAll().doOnSuccess { db.insert(it).subscribe() }
+                repository.getAll().observeOn(Schedulers.io()).doOnSuccess { db.insert(it).subscribe() }
+                    .doOnError { Single.just(emptyList<Book>()) }
             } else {
                 Single.just(books)
             }
@@ -30,7 +31,7 @@ class BooksInteractorImpl @Inject constructor(
 
     override fun get(id: String): Maybe<Book> = db.get(id).flatMap { book: Book ->
         if (book.id.isEmpty()) {
-            repository.get(id).doOnSuccess { db.insert(it).subscribe() }
+            repository.get(id).observeOn(Schedulers.io()).doOnSuccess { db.insert(it).subscribe() }
         } else {
             Maybe.just(book)
         }
@@ -41,7 +42,7 @@ class BooksInteractorImpl @Inject constructor(
         .observeOn(Schedulers.io())
         .doOnSuccess { id ->
             book.id = id
-            db.insert(book).subscribe()
+            db.insert(book).observeOn(Schedulers.io()).subscribe()
         }.map { Result.success(book) }
 
     override fun insert(books: Books): Single<Result<Books>> =repository.insert(books)
@@ -51,13 +52,13 @@ class BooksInteractorImpl @Inject constructor(
             books.forEachIndexed { index, book ->
                 book.id = ids[index]
             }
-            db.insert(books).subscribe()
+            db.insert(books).observeOn(Schedulers.io()).subscribe()
         }.map { Result.success(books) }
 
 
     override fun update(book: Book): Completable =
-        repository.update(book).doOnComplete { db.update(book).subscribe() }
+        repository.update(book).observeOn(Schedulers.io()).doOnComplete { db.update(book).subscribe() }
 
     override fun delete(book: Book): Completable =
-        repository.delete(book).doOnComplete { db.delete(book).subscribe() }
+        repository.delete(book).observeOn(Schedulers.io()).doOnComplete { db.delete(book).subscribe() }
 }

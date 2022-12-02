@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.orels.samples.book_notes.common.StubData
 import com.orels.samples.book_notes.domain.interactor.BookNotesInteractor
 import com.orels.samples.book_notes.domain.interactor.BooksInteractor
 import com.orels.samples.book_notes.domain.model.Book
@@ -24,17 +23,7 @@ class BookNotesViewModel @Inject constructor(
         private set
 
     init {
-        booksInteractor.insert(StubData.books)
-            .zipWith(bookNotesInteractor.insert(StubData.bookNotes))
-            .observeOn(AndroidSchedulers.mainThread()).subscribe { (booksResult, bookNotesResult) ->
-                booksResult.getOrNull()?.map {
-                    BookNotesItem(book = booksResult.getOrNull()?.find { book -> book.id == it.id },
-                        bookNotes = bookNotesResult.getOrNull()
-                            ?.filter { bookNote -> bookNote.bookId == it.id } ?: emptyList())
-                }?.let {
-                    state = state.copy(bookNoteItems = it)
-                }
-            }
+        getData()
     }
 
     fun onBookNotesEvent(event: BookNoteEvent) {
@@ -42,7 +31,6 @@ class BookNotesViewModel @Inject constructor(
             is BookNoteEvent.AddBookNote -> addBookNotes(event.bookNote)
             is BookNoteEvent.RemoveBookNote -> removeBookNote(event.bookNote)
             is BookNoteEvent.UpdateBookNote -> updateBookNote(event.bookNote)
-            else -> {}
         }
     }
 

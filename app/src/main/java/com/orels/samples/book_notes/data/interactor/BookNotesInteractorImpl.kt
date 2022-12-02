@@ -37,23 +37,22 @@ class BookNotesInteractorImpl @Inject constructor(
 
     override fun update(bookNote: BookNote): Completable =
         repository.update(bookNote).subscribeOn(Schedulers.io()).doOnComplete {
-            db.update(bookNote)
-                .subscribe()
+            db.update(bookNote).observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe()
         }
 
     override fun delete(bookNote: BookNote): Completable =
         repository.delete(bookNote).subscribeOn(Schedulers.io()).doOnComplete {
-            db.delete(bookNote.id)
-                .subscribe()
+            db.delete(bookNote.id).observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe()
         }
 
 
     override fun getAll(): Single<Result<List<BookNote>>> =
         db.getAll().subscribeOn(Schedulers.io()).flatMap { list ->
             if (list.isEmpty()) {
-                repository.getAll().subscribeOn(Schedulers.io()).flatMapCompletable { listFromRemote ->
-                    db.insertAll(listFromRemote).subscribeOn(Schedulers.io())
-                }.andThen(Single.just(Result.success(list)))
+                repository.getAll().subscribeOn(Schedulers.io())
+                    .flatMapCompletable { listFromRemote ->
+                        db.insertAll(listFromRemote).subscribeOn(Schedulers.io())
+                    }.andThen(Single.just(Result.success(list)))
             } else {
                 Single.just(Result.success(list))
             }
@@ -65,7 +64,7 @@ class BookNotesInteractorImpl @Inject constructor(
         db.get(id).subscribeOn(Schedulers.io()).flatMap { task ->
             if (task.isNullOrEmpty()) {
                 repository.get(id).subscribeOn(Schedulers.io()).doOnSuccess { t ->
-                    db.insert(t).subscribeOn(Schedulers.io()).subscribe()
+                    db.insert(t).subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).subscribe()
                 }
             } else {
                 Single.just(task)

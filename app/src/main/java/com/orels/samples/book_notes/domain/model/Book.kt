@@ -8,7 +8,7 @@ typealias Books = List<Book>
 @Entity(primaryKeys = ["id"])
 data class Book(
     var id: String = "",
-    var title: String,
+    var title: String = "",
     var isActive: Boolean = true,
 ) : DropdownItem {
     override fun getIdentifier(): String {

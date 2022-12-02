@@ -35,8 +35,11 @@ data class BookNote(
 }
 
 class BookLocation(
-    page: Int? = null,
-    hours: Int? = null,
-    minutes: Int? = null,
-    seconds: Int? = null,
-)
+    var page: Long = 0,
+    var hours: Long = 0,
+    var minutes: Long = 0,
+    var seconds: Long = 0,
+) {
+    constructor(page: Int) : this(page.toLong())
+    constructor(hours: Int, minutes: Int, seconds: Int) : this(hours.toLong(), minutes.toLong(), seconds.toLong())
+}

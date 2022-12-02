@@ -7,6 +7,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:442544807853:android:e107f2a248985fc4d3cb24",
+        "android_client_info": {
+          "package_name": "com.orels.samples"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442544807853-pu53totev56totup98ln8gm1r9680bdd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orels.samples",
+            "certificate_hash": "f324263bd2f85f3a201cc587f9d67334802b323a"
+          }
+        },
+        {
+          "client_id": "442544807853-cjs3cl6hk5nd5nie25u25bif774ngbv0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA04vPz3M0duSV44NShAF4GtFqgndko_dQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442544807853-cjs3cl6hk5nd5nie25u25bif774ngbv0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:442544807853:android:c129635823a26563d3cb24",
         "android_client_info": {
           "package_name": "com.orels.samples.book_notes"

@@ -117,10 +117,10 @@ fun AddNewBookNote(onAddBookNote: (BookNote) -> Unit, onDismiss: () -> Unit, boo
                                     note = bookNote,
                                     location = BookLocation(page = bookPage),
                                 ))
-                            onDismiss()
+                                onDismiss()
                             }
                         } else {
-                            if(audioBookHour >= 0 && audioBookMinute >= 0 && audioBookSecond >= 0) {
+                            if (audioBookHour >= 0 && audioBookMinute >= 0 && audioBookSecond >= 0) {
                                 onAddBookNote.invoke(BookNote(
                                     bookId = selectedBook?.id ?: "",
                                     title = noteTitle,
@@ -129,7 +129,7 @@ fun AddNewBookNote(onAddBookNote: (BookNote) -> Unit, onDismiss: () -> Unit, boo
                                         minutes = audioBookMinute,
                                         seconds = audioBookSecond),
                                 ))
-                            onDismiss()
+                                onDismiss()
                             }
                         }
                     } else {
@@ -201,7 +201,11 @@ fun LocationInBook(
     Input(
         modifier = modifier,
         placeholder = stringResource(R.string.page_no_caps),
-        onTextChange = { onBookPageChange(it.toInt()) },
+        title = stringResource(R.string.page_no_caps),
+        defaultValue = bookPage.toString(),
+        onTextChange = {
+            onBookPageChange(it.toIntOrNull() ?: 0)
+        },
         maxCharacters = 4,
         inputType = InputType.Number,
     )
