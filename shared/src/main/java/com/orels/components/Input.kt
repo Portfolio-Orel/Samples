@@ -4,7 +4,7 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
@@ -26,66 +26,70 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
+enum class InputType {
+    Text, Number
+}
 
 @Composable
 fun Input(
     modifier: Modifier = Modifier,
+    inputType: InputType = InputType.Text,
     title: String = "",
     placeholder: String = "",
-    initialText: String = "",
+    defaultValue: String = "",
     minLines: Int = 1,
     maxLines: Int = 1,
     isError: Boolean = false,
     isPassword: Boolean = false,
     shouldFocus: Boolean = false,
     leadingIcon: @Composable (() -> Unit) = { },
-    trailingIcon: @Composable (() -> Unit) = { },
-    onTextChange: (String) -> Unit = {}
+    trailingIcon: @Composable (() -> Unit)? = null,
+    onTextChange: (String) -> Unit = {},
+    maxCharacters: Int? = null,
 ) {
-    val value = remember { mutableStateOf(initialText) }
+    val value = remember { mutableStateOf(defaultValue) }
     val passwordVisible = rememberSaveable { mutableStateOf(false) }
     val lineHeight = 40
     val focusRequester = FocusRequester()
+    val widthPerCharacter = 20
 
-    var inputModifier = if(shouldFocus) Modifier.focusRequester(focusRequester) else Modifier
+    val inputModifier = if (shouldFocus) Modifier.focusRequester(focusRequester) else Modifier
 
-    inputModifier =
-        if (maxLines == 1) inputModifier else inputModifier.height((lineHeight * minLines).dp)
-
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = (maxCharacters?.let { modifier.width((it * widthPerCharacter).dp) }
+        ?: modifier.fillMaxWidth())) {
         Text(title)
-        Box(modifier = Modifier.zIndex(1f)) {
-            OutlinedTextField(
-                modifier = inputModifier
-                    .fillMaxWidth()
-                    .focusable(enabled = shouldFocus),
+        Box(modifier = inputModifier.zIndex(1f)) {
+            OutlinedTextField(modifier = Modifier
+                .fillMaxWidth()
+                .focusable(enabled = shouldFocus),
                 value = value.value,
                 onValueChange = {
-                    value.value = it
-                    onTextChange(it)
+                    when (inputType) {
+                        InputType.Text -> {
+                            if (maxCharacters == null || it.length <= maxCharacters) {
+                                value.value = it
+                                onTextChange(it)
+                            }
+                        }
+                        InputType.Number -> {
+                            if (it.matches(Regex("[0-9]*")) && (maxCharacters == null || it.length <= maxCharacters)) {
+                                value.value = it
+                                onTextChange(it)
+                            }
+                        }
+
+                    }
                 },
                 placeholder = {
-                    Text(
-                        text = placeholder,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-                    )
+                    Text(text = placeholder,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
                 },
                 singleLine = maxLines == 1,
                 visualTransformation = if (isPassword && !passwordVisible.value) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = if (isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions(
-                    keyboardType = KeyboardType.Text
-                ),
-                trailingIcon = {
-                    if (isPassword) {
-                        PasswordIcon(
-                            passwordVisible = passwordVisible.value,
-                            onClick = { passwordVisible.value = !passwordVisible.value })
-                    } else {
-                        trailingIcon()
-                    }
-                },
-                isError = isError
-            )
+                    keyboardType = KeyboardType.Text),
+                trailingIcon = trailingIcon,
+                isError = isError)
         }
     }
 }
@@ -93,10 +97,9 @@ fun Input(
 @Composable
 private fun PasswordIcon(
     passwordVisible: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
-    val image = if (passwordVisible)
-        painterResource(id = R.drawable.ic_visibility_off_24)
+    val image = if (passwordVisible) painterResource(id = R.drawable.ic_visibility_off_24)
     else painterResource(id = R.drawable.ic_visibility_24)
     val description =
         if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)

@@ -5,4 +5,5 @@
     <string name="expansion_button">Expansion Button</string>
     <string name="hide_password">hide password</string>
     <string name="show_password">show password</string>
+    <string name="show_or_hide">Show/Hide</string>
 </resources>

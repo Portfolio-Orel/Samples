@@ -3,4 +3,12 @@
     <string name="add_book_note">Add Book Note</string>
     <string name="select_a_book">Select a book</string>
     <string name="add_note">Add Note</string>
+    <string name="book">Book</string>
+    <string name="audio_book">AudioBook</string>
+    <string name="minute_short">min</string>
+    <string name="seconds_short">sec</string>
+    <string name="hours_short">hrs</string>
+    <string name="zero">0</string>
+    <string name="enter_a_title_for_the_note">Enter a title for the note</string>
+    <string name="Enter_a_note">Enter a note</string>
 </resources>

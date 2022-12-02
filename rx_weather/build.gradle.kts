@@ -84,6 +84,5 @@ dependencies {
 
     // Status Bar
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
-
-    api(project(":components"))
+    api(project(":shared"))
 }
