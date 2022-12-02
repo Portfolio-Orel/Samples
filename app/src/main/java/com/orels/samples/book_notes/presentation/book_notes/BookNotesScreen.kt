@@ -38,7 +38,8 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
 //            onDismiss = { shouldShowAddBookNote = false },
 //            books = state.bookNoteItems.map { it.book ?: Book.Empty }
 //        )
-        AddBook(onAddBook = {}, onDismiss = { shouldShowAddBookNote = false })
+        AddBook(onAddBook = { viewModel.onBookEvent(BookEvent.AddBook(it)) },
+            onDismiss = { shouldShowAddBookNote = false })
 
     }
 
