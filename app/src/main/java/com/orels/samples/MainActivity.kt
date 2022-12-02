@@ -55,12 +55,13 @@ class MainActivity : ComponentActivity() {
                             lifecycleOwner.lifecycle.removeObserver(observer)
                         }
                     })
-            }
-            Surface(
-                modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
-            ) {
-//                WeatherScreen()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+//                    WeatherScreen()
                 TodoScreen()
+                }
             }
         }
     }
