@@ -27,9 +27,16 @@ data class BookNote(
     var bookId: String = "",
     var title: String = "",
     var note: String = "",
-    var page: Int? = null,
+    var location: BookLocation = BookLocation(page = 0),
     var createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo(defaultValue = "1") var isActive: Boolean = true,
 ) {
     fun isNullOrEmpty(): Boolean = id.isBlank()
 }
+
+class BookLocation(
+    page: Int? = null,
+    hours: Int? = null,
+    minutes: Int? = null,
+    seconds: Int? = null,
+)

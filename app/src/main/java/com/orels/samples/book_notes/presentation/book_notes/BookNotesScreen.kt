@@ -19,9 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.orels.components.Loading
 import com.orels.samples.R
-import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.BookNote
-import com.orels.samples.book_notes.presentation.book_notes.component.AddNewBookNote
+import com.orels.samples.book_notes.presentation.book_notes.component.AddBook
 import com.orels.samples.book_notes.presentation.book_notes.model.BookNotesItem
 
 @Composable
@@ -30,11 +29,17 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
     var shouldShowAddBookNote by remember { mutableStateOf(false) }
 
     if (shouldShowAddBookNote) {
-        AddNewBookNote(
-            onAddBook = { },
-            onDismiss = { shouldShowAddBookNote = false },
-            books = state.bookNoteItems.map { it.book ?: Book.Empty }
-        )
+//        AddNewBookNote(
+//            onAddBookNote = {
+//                viewModel.onEvent(BookNoteEvent.AddBookNote(
+//                    it
+//                ))
+//            },
+//            onDismiss = { shouldShowAddBookNote = false },
+//            books = state.bookNoteItems.map { it.book ?: Book.Empty }
+//        )
+        AddBook(onAddBook = {}, onDismiss = { shouldShowAddBookNote = false })
+
     }
 
     if (state.isLoading) {
@@ -43,9 +48,9 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
         Box(contentAlignment = Alignment.TopCenter) {
             Column {
                 BookNotesList(bookNotes = state.bookNoteItems, onDelete = { task ->
-                    viewModel.onEvent(BookNoteEvent.RemoveBookNote(task))
+                    viewModel.onBookNotesEvent(BookNoteEvent.RemoveBookNote(task))
                 }, onUpdate = { task ->
-                    viewModel.onEvent(BookNoteEvent.UpdateBookNote(task))
+                    viewModel.onBookNotesEvent(BookNoteEvent.UpdateBookNote(task))
                 })
             }
             FloatingActionButton(modifier = Modifier

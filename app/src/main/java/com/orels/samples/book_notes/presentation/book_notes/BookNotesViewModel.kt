@@ -36,7 +36,7 @@ class BookNotesViewModel @Inject constructor(
             }
     }
 
-    fun onEvent(event: BookNoteEvent) {
+    fun onBookNotesEvent(event: BookNoteEvent) {
         when (event) {
             is BookNoteEvent.AddBookNote -> addBookNotes(event.bookNote)
             is BookNoteEvent.RemoveBookNote -> removeBookNote(event.bookNote)

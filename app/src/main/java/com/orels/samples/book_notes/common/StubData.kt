@@ -1,6 +1,7 @@
 package com.orels.samples.book_notes.common
 
 import com.orels.samples.book_notes.domain.model.Book
+import com.orels.samples.book_notes.domain.model.BookLocation
 import com.orels.samples.book_notes.domain.model.BookNote
 
 object StubData {
@@ -38,7 +39,7 @@ object StubData {
             bookId = books.random().id,
             title = "Title $it",
             note = "Note $it",
-            page = 43,
+            location = BookLocation(page = 43),
             createdAt = System.currentTimeMillis(),
             isActive = true
         )

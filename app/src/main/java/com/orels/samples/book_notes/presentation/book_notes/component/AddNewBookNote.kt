@@ -23,6 +23,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.orels.components.*
 import com.orels.extension.multiplyByGoldenRatio
 import com.orels.samples.R
+import com.orels.samples.book_notes.domain.model.BookLocation
+import com.orels.samples.book_notes.domain.model.BookNote
 import com.orels.samples.book_notes.domain.model.Books
 
 private enum class BookType {
@@ -39,7 +41,7 @@ private enum class BookType {
 }
 
 @Composable
-fun AddNewBookNote(onAddBook: (String) -> Unit, onDismiss: () -> Unit, books: Books) {
+fun AddNewBookNote(onAddBookNote: (BookNote) -> Unit, onDismiss: () -> Unit, books: Books) {
     var selectedBook by remember { mutableStateOf(books.firstOrNull()) }
     var bookType by rememberSaveable { mutableStateOf(BookType.Book) }
     var bookNote by remember { mutableStateOf("") }
@@ -89,8 +91,7 @@ fun AddNewBookNote(onAddBook: (String) -> Unit, onDismiss: () -> Unit, books: Bo
             if (bookType == BookType.Book) {
                 LocationInBook(bookPage = bookPage, onBookPageChange = { bookPage = it })
             } else {
-                LocationInAudioBook(
-                    onHoursChange = { audioBookHour = it },
+                LocationInAudioBook(onHoursChange = { audioBookHour = it },
                     onMinutesChange = { audioBookMinute = it },
                     onSecondsChange = { audioBookSecond = it },
                     hours = audioBookHour,
@@ -107,8 +108,33 @@ fun AddNewBookNote(onAddBook: (String) -> Unit, onDismiss: () -> Unit, books: Bo
             Button(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
-                    onAddBook(selectedBook?.title ?: "")
-                    onDismiss()
+                    if (noteTitle.isNotBlank() && bookNote.isNotBlank() && selectedBook != null) {
+                        if (bookType == BookType.Book) {
+                            if (bookPage > 0) {
+                                onAddBookNote.invoke(BookNote(
+                                    bookId = selectedBook?.id ?: "",
+                                    title = noteTitle,
+                                    note = bookNote,
+                                    location = BookLocation(page = bookPage),
+                                ))
+                            onDismiss()
+                            }
+                        } else {
+                            if(audioBookHour >= 0 && audioBookMinute >= 0 && audioBookSecond >= 0) {
+                                onAddBookNote.invoke(BookNote(
+                                    bookId = selectedBook?.id ?: "",
+                                    title = noteTitle,
+                                    note = bookNote,
+                                    location = BookLocation(hours = audioBookHour,
+                                        minutes = audioBookMinute,
+                                        seconds = audioBookSecond),
+                                ))
+                            onDismiss()
+                            }
+                        }
+                    } else {
+                        // TODO: Show error
+                    }
                 },
             ) {
                 Text(
@@ -134,15 +160,13 @@ fun LocationInAudioBook(
 
     val inputModifier = Modifier.padding(horizontal = paddingBetweenItems / 2)
 
-    Row(
-        modifier = modifier,
+    Row(modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+        verticalAlignment = Alignment.CenterVertically) {
         Input(
             modifier = inputModifier,
             title = stringResource(R.string.hours_short),
-            defaultValue = hours.toString(),
+            placeholder = stringResource(R.string.hours_short),
             onTextChange = {
                 onHoursChange(it.toIntOrNull() ?: 0)
             },
@@ -152,7 +176,7 @@ fun LocationInAudioBook(
         Input(
             modifier = inputModifier,
             title = stringResource(R.string.minute_short),
-            defaultValue = minutes.toString(),
+            placeholder = stringResource(R.string.minute_short),
             onTextChange = { onMinutesChange(it.toIntOrNull() ?: 0) },
             maxCharacters = 3,
             inputType = InputType.Number,
@@ -160,7 +184,7 @@ fun LocationInAudioBook(
         Input(
             modifier = inputModifier,
             title = stringResource(R.string.seconds_short),
-            defaultValue = seconds.toString(),
+            placeholder = stringResource(R.string.seconds_short),
             onTextChange = { onSecondsChange(it.toIntOrNull() ?: 0) },
             maxCharacters = 3,
             inputType = InputType.Number,
@@ -176,9 +200,8 @@ fun LocationInBook(
 ) {
     Input(
         modifier = modifier,
-        placeholder = "Enter the page of the note",
+        placeholder = stringResource(R.string.page_no_caps),
         onTextChange = { onBookPageChange(it.toInt()) },
-        defaultValue = bookPage.toString(),
         maxCharacters = 4,
         inputType = InputType.Number,
     )
