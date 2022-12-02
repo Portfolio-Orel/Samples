@@ -52,22 +52,24 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("com.google.android.material:material:1.5.0")
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.appcompat:appcompat:1.4.2")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
     // Compose
-    implementation("androidx.activity:activity-compose:1.3.1")
-    implementation("androidx.compose.ui:ui:1.1.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.1.1")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha02")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.1.1")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.1.1")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.1.1")
+    api("androidx.activity:activity-compose:1.3.1")
+    api("androidx.compose.ui:ui:1.2.1")
+    api("androidx.compose.ui:ui-tooling-preview:1.2.1")
+    androidTestApi("androidx.compose.ui:ui-test-junit4:1.1.1")
+    debugApi("androidx.compose.ui:ui-tooling:1.2.1")
+    debugApi("androidx.compose.ui:ui-test-manifest:1.2.1")
+
+    // Material
+    api("androidx.compose.material3:material3:1.1.0-alpha02")
+    api("com.google.android.material:material:1.7.0")
 
     // Hilt ViewModel
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
@@ -109,9 +111,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     // Auth
 
-    api(project(":components"))
+    api(project(":shared"))
     api(project(":rx_weather"))
-
 }
 
 // Allow references to generated code

@@ -2,6 +2,7 @@ package com.orels.samples.book_notes.domain.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 
 
 typealias BookNotes = List<BookNote>
@@ -16,18 +17,26 @@ typealias BookNotes = List<BookNote>
  * @param isActive the status of the book note
  */
 @Entity(primaryKeys = ["id"],
-//    foreignKeys = [ForeignKey(entity = Book::class,
-//        parentColumns = ["id"],
-//        childColumns = ["bookId"],
-//        onDelete = ForeignKey.NO_ACTION)]
+    foreignKeys = [ForeignKey(entity = Book::class,
+        parentColumns = ["id"],
+        childColumns = ["bookId"],
+        onDelete = ForeignKey.NO_ACTION)]
 )
 data class BookNote(
     var id: String = "",
     var bookId: String = "",
-    var note: String? = null,
-    var page: Int? = null,
+    var title: String = "",
+    var note: String = "",
+    var location: BookLocation = BookLocation(page = 0),
     var createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo(defaultValue = "1") var isActive: Boolean = true,
 ) {
     fun isNullOrEmpty(): Boolean = id.isBlank()
 }
+
+class BookLocation(
+    page: Int? = null,
+    hours: Int? = null,
+    minutes: Int? = null,
+    seconds: Int? = null,
+)

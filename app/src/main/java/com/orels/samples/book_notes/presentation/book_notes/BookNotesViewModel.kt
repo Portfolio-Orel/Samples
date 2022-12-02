@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.orels.samples.book_notes.common.StubData
 import com.orels.samples.book_notes.domain.interactor.BookNotesInteractor
 import com.orels.samples.book_notes.domain.interactor.BooksInteractor
+import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.BookNote
 import com.orels.samples.book_notes.presentation.book_notes.model.BookNotesItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,21 +24,33 @@ class BookNotesViewModel @Inject constructor(
         private set
 
     init {
-        StubData.books.forEach {
-            booksInteractor.insert(it).subscribe()
-        }
-        StubData.bookNotes.forEach {
-            bookNotesInteractor.insert(it).subscribe()
-        }
-        getData()
+        booksInteractor.insert(StubData.books)
+            .zipWith(bookNotesInteractor.insert(StubData.bookNotes))
+            .observeOn(AndroidSchedulers.mainThread()).subscribe { (booksResult, bookNotesResult) ->
+                booksResult.getOrNull()?.map {
+                    BookNotesItem(book = booksResult.getOrNull()?.find { book -> book.id == it.id },
+                        bookNotes = bookNotesResult.getOrNull()
+                            ?.filter { bookNote -> bookNote.bookId == it.id } ?: emptyList())
+                }?.let {
+                    state = state.copy(bookNoteItems = it)
+                }
+            }
     }
 
-    fun onEvent(event: BookNoteEvent) {
+    fun onBookNotesEvent(event: BookNoteEvent) {
         when (event) {
             is BookNoteEvent.AddBookNote -> addBookNotes(event.bookNote)
             is BookNoteEvent.RemoveBookNote -> removeBookNote(event.bookNote)
             is BookNoteEvent.UpdateBookNote -> updateBookNote(event.bookNote)
             else -> {}
+        }
+    }
+
+    fun onBookEvent(event: BookEvent) {
+        when (event) {
+            is BookEvent.AddBook -> addBook(event.book)
+            is BookEvent.RemoveBook -> removeBook(event.book)
+            is BookEvent.UpdateBook -> updateBook(event.book)
         }
     }
 
@@ -48,8 +61,7 @@ class BookNotesViewModel @Inject constructor(
     private fun getData() {
         state = state.copy(isLoading = true)
         booksInteractor.getAll().zipWith(bookNotesInteractor.getAll())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ (books, bookNotes) ->
+            .observeOn(AndroidSchedulers.mainThread()).subscribe({ (books, bookNotes) ->
                 val bookNotesItems = books.map { book ->
                     BookNotesItem(book = book)
                 }
@@ -110,4 +122,32 @@ class BookNotesViewModel @Inject constructor(
         }, { error ->
             setNewState(state.copy(error = error.message ?: "", isLoading = false))
         })
+
+    private fun addBook(book: Book) =
+        booksInteractor.insert(book).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            setNewState(state.copy(bookNoteItems = state.bookNoteItems + BookNotesItem(book = book)))
+        }, { error ->
+            setNewState(state.copy(error = error.message ?: "", isLoading = false))
+        })
+
+    private fun removeBook(book: Book) =
+        booksInteractor.delete(book).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            setNewState(state.copy(bookNoteItems = state.bookNoteItems.filter { it.book?.id != book.id }))
+        }, { error ->
+            setNewState(state.copy(error = error.message ?: "", isLoading = false))
+        })
+
+    private fun updateBook(book: Book) =
+        booksInteractor.update(book).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            setNewState(state.copy(bookNoteItems = state.bookNoteItems.map { bookNoteItem ->
+                if (bookNoteItem.book?.id == book.id) {
+                    bookNoteItem.copy(book = book)
+                } else {
+                    bookNoteItem
+                }
+            }))
+        }, { error ->
+            setNewState(state.copy(error = error.message ?: "", isLoading = false))
+        })
+
 }

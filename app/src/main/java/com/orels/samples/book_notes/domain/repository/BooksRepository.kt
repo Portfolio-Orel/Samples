@@ -1,6 +1,7 @@
 package com.orels.samples.book_notes.domain.repository
 
 import com.orels.samples.book_notes.domain.model.Book
+import com.orels.samples.book_notes.domain.model.Books
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -25,6 +26,13 @@ interface BooksRepository {
      * @return the id of the inserted book
      */
     fun insert(book: Book): Single<String>
+
+    /**
+     * Inserts a new book into the remote database
+     * @param books the books to insert
+     * @return the ids of the inserted books
+     */
+    fun insert(books: Books): Single<List<String>>
 
     /**
      * Updates a book in the remote database

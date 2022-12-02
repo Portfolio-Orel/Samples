@@ -1,6 +1,7 @@
 package com.orels.samples.book_notes.domain.repository
 
 import com.orels.samples.book_notes.domain.model.BookNote
+import com.orels.samples.book_notes.domain.model.BookNotes
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
@@ -8,16 +9,16 @@ interface BookNotesRepository {
     /**
      * Inserts a new task into the database
      * @param bookNote the task to insert
-     * @return the id of the inserted task
+     * @return the id of the inserted book notes
      */
     fun insert(bookNote: BookNote): Single<String>
 
     /**
      * Inserts a list of new tasks into the database
      * @param bookNotes the list of tasks to insert
-     * @return the number of rows affected
+     * @return the ids of the inserted book notes
      */
-    fun insertAll(bookNotes: List<BookNote>): Completable
+    fun insert(bookNotes: BookNotes): Single<List<String>>
 
     /**
      * Updates a task in the database

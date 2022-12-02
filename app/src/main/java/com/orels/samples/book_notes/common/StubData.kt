@@ -1,6 +1,7 @@
 package com.orels.samples.book_notes.common
 
 import com.orels.samples.book_notes.domain.model.Book
+import com.orels.samples.book_notes.domain.model.BookLocation
 import com.orels.samples.book_notes.domain.model.BookNote
 
 object StubData {
@@ -31,13 +32,14 @@ object StubData {
         )
     )
 
-    // A list of 20 book notes of object BookNote using the books list randomally
+    // A list of 20 book notes of object BookNote using the books list randomly
     val bookNotes = (1..20).map {
         BookNote(
             id = "$it",
             bookId = books.random().id,
-            note = "This is a note :) $it",
-            page = 43,
+            title = "Title $it",
+            note = "Note $it",
+            location = BookLocation(page = 43),
             createdAt = System.currentTimeMillis(),
             isActive = true
         )

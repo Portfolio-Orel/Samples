@@ -1,6 +1,7 @@
 package com.orels.samples.book_notes.domain.interactor
 
 import com.orels.samples.book_notes.domain.model.Book
+import com.orels.samples.book_notes.domain.model.Books
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -22,9 +23,16 @@ interface BooksInteractor {
     /**
      * Inserts a new book into the remote database, then with the id received from the remote, insert into local
      * @param book the book to insert
-     * @return the id of the inserted book
+     * @return the book with the id of the inserted book
      */
-    fun insert(book: Book): Single<String>
+    fun insert(book: Book): Single<Result<Book>>
+
+    /**
+     * Inserts a new book into the remote database, then with the ids received from the remote, insert into local
+     * @param books the books to insert
+     * @return the the books with  of the inserted books
+     */
+    fun insert(books: Books): Single<Result<List<Book>>>
 
     /**
      * Updates a book in the remote database, then update in local

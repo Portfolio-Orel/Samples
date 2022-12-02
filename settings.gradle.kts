@@ -16,5 +16,5 @@ rootProject.name = "samples"
 include(
     ":app"
 )
-include(":components")
+include(":shared")
 include(":rx_weather")

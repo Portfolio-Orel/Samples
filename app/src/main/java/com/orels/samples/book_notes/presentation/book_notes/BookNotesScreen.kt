@@ -1,44 +1,72 @@
 package com.orels.samples.book_notes.presentation.book_notes
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.orels.components.Loading
+import com.orels.samples.R
+import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.BookNote
+import com.orels.samples.book_notes.presentation.book_notes.component.AddBook
+import com.orels.samples.book_notes.presentation.book_notes.component.AddNewBookNote
 import com.orels.samples.book_notes.presentation.book_notes.model.BookNotesItem
+import com.orels.samples.ui.multi_fab.MiniFloatingAction
+import com.orels.samples.ui.multi_fab.MultiFab
 
 @Composable
 fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
     val state = viewModel.state
+    var shouldShowAddBookNote by remember { mutableStateOf(false) }
+    var shouldShowAddBook by remember { mutableStateOf(false) }
 
+    if (shouldShowAddBookNote) {
+        AddNewBookNote(
+            onAddBookNote = {
+                viewModel.onBookNotesEvent(BookNoteEvent.AddBookNote(
+                    it
+                ))
+            },
+            onDismiss = { shouldShowAddBookNote = false },
+            books = state.bookNoteItems.map { it.book ?: Book.Empty }
+        )
+    }
+    if (shouldShowAddBook) {
+        AddBook(onAddBook = { viewModel.onBookEvent(BookEvent.AddBook(it)) },
+            onDismiss = { shouldShowAddBook = false })
+    }
     if (state.isLoading) {
         Loading(size = 16.dp, width = 2.dp)
     } else {
-        Column {
-
-            BookNotesList(bookNotes = state.bookNoteItems, onDelete = { task ->
-                viewModel.onEvent(BookNoteEvent.RemoveBookNote(task))
-            }, onUpdate = { task ->
-                viewModel.onEvent(BookNoteEvent.UpdateBookNote(task))
-            })
-            Button(onClick = {
-                viewModel.onEvent(BookNoteEvent.AddBookNote(BookNote(id = "${state.bookNoteItems.size + 1}",
-                    bookId = "First book",
-                    note = "This is the first note ${System.currentTimeMillis()}",
-                    page = 43,
-                    createdAt = System.currentTimeMillis(),
-                    isActive = true)))
-            }) {
-
+        Box(contentAlignment = Alignment.TopCenter) {
+            Column {
+                BookNotesList(bookNotes = state.bookNoteItems, onDelete = { task ->
+                    viewModel.onBookNotesEvent(BookNoteEvent.RemoveBookNote(task))
+                }, onUpdate = { task ->
+                    viewModel.onBookNotesEvent(BookNoteEvent.UpdateBookNote(task))
+                })
             }
+            MultiFab(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 40.dp),
+                miniFloatingActionButtons = listOf(MiniFloatingAction(
+                    icon = R.drawable.ic_round_note,
+                    action = { shouldShowAddBookNote = true }
+                ), MiniFloatingAction(
+                    icon = R.drawable.ic_book,
+                    action = { shouldShowAddBook = true }
+                )),
+                iconCollapsed = R.drawable.ic_round_add,
+                iconExpanded = R.drawable.ic_round_close)
         }
     }
 }
@@ -51,10 +79,8 @@ fun BookNotesList(
 ) {
     Column() {
         bookNotes.forEach { bookNotesItem ->
-            Text(
-                text = bookNotesItem.book?.title ?: "Book",
-                style = MaterialTheme.typography.titleLarge
-            )
+            Text(text = bookNotesItem.book?.title ?: "Book",
+                style = MaterialTheme.typography.titleLarge)
             BookNoteItemComponent(bookNotesItem = bookNotesItem,
                 onDelete = onDelete,
                 onUpdate = onUpdate)
@@ -79,7 +105,7 @@ fun BookNoteItemComponent(
                         }
                         .padding(horizontal = 8.dp),
                 )
-                Text(text = it.note ?: "Hello")
+                Text(text = it.title)
             }
         }
     }
