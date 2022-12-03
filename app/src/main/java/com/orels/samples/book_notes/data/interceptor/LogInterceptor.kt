@@ -14,21 +14,21 @@ class LogInterceptor : Interceptor {
         val request = chain.request()
         val response = chain.proceed(request)
         val buffer = Buffer()
-        request.body()?.writeTo(buffer)
+        request.body?.writeTo(buffer)
         Log.v(
             tag,
-            "HTTP Request: ${response.request().url()}," +
-                    " method: ${response.request().method()}," +
-                    " status: ${response.code()}," +
+            "HTTP Request: ${response.request.url}," +
+                    " method: ${response.request.method}," +
+                    " status: ${response.code}," +
                     " request body: ${buffer.readUtf8()}"
         )
         try {
             if (!response.isSuccessful) {
                 Log.e(
                     tag,
-                    "\n${response.request().url()}, method: ${
-                        response.request().method()
-                    }, Failed with error: ${response.message()}\n",
+                    "\n${response.request.url}, method: ${
+                        response.request.method
+                    }, Failed with error: ${response.message}\n",
 //                    attributes = mapOf("response" to response.peekBody(2048).string())
                 )
             } else {

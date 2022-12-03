@@ -19,13 +19,12 @@ import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.BookNote
 import com.orels.samples.book_notes.presentation.book_notes.component.AddBook
 import com.orels.samples.book_notes.presentation.book_notes.component.AddNewBookNote
-import com.orels.samples.book_notes.presentation.book_notes.component.search_box.SearchBookComponent
 import com.orels.samples.book_notes.presentation.book_notes.model.BookNotesItem
 import com.orels.samples.ui.multi_fab.MiniFloatingAction
 import com.orels.samples.ui.multi_fab.MultiFab
 
 @Composable
-fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
+fun BookNotesScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
     val state = viewModel.state
     var shouldShowAddBookNote by remember { mutableStateOf(false) }
     var shouldShowAddBook by remember { mutableStateOf(false) }
@@ -49,16 +48,6 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
         Loading(size = 16.dp, width = 2.dp)
     } else {
         Box(contentAlignment = Alignment.TopCenter) {
-            Column {
-                BookNotesList(bookNotes = state.bookNoteItems, onDelete = { task ->
-                    viewModel.onBookNotesEvent(BookNoteEvent.RemoveBookNote(task))
-                }, onUpdate = { task ->
-                    viewModel.onBookNotesEvent(BookNoteEvent.UpdateBookNote(task))
-                })
-            }
-            SearchBookComponent(onBookSelected = { book ->
-                viewModel.onBookEvent(BookEvent.AddBook(book))
-            })
             MultiFab(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)

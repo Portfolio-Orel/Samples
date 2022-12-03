@@ -19,4 +19,6 @@
     <string name="main_fab">Main Fab</string>
     <string name="x_caps">X</string>
     <string name="search">Search</string>
+    <string name="a_thumbnail_of_the_book">a thumbnail of the book</string>
+    <string name="book_image_placeholder">Book image placeholder</string>
 </resources>

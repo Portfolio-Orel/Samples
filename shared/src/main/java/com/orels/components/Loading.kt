@@ -11,12 +11,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Loading(
+    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground,
     size: Dp = 24.dp,
     width: Dp = 2.dp
 ) {
     CircularProgressIndicator(
-        modifier = Modifier
+        modifier = modifier
             .size(24.dp),
         color = color,
         strokeWidth = 2.dp

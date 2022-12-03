@@ -4,12 +4,12 @@ import com.orels.rx_weather.data.remote.interactor.WeatherInteractorImpl
 import com.orels.rx_weather.domain.interactor.WeatherInteractor
 import com.orels.samples.book_notes.data.interactor.BookNotesInteractorImpl
 import com.orels.samples.book_notes.data.interactor.BooksInteractorImpl
-import com.orels.samples.book_notes.domain.repository.BookNotesRepository
-import com.orels.samples.book_notes.domain.repository.BooksRepository
 import com.orels.samples.book_notes.data.remote.BookNotesRepositoryImpl
 import com.orels.samples.book_notes.data.remote.BooksRepositoryImpl
 import com.orels.samples.book_notes.domain.interactor.BookNotesInteractor
 import com.orels.samples.book_notes.domain.interactor.BooksInteractor
+import com.orels.samples.book_notes.domain.repository.BookNotesRepository
+import com.orels.samples.book_notes.domain.repository.BooksRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,11 +28,11 @@ abstract class RepositoryModule {
     // BookNotes
     @Binds
     @Singleton
-    abstract fun provideBookNotesRepository(todoRepository: BookNotesRepositoryImpl): BookNotesRepository
+    abstract fun provideBookNotesRepository(bookNotesRepository: BookNotesRepositoryImpl): BookNotesRepository
 
     @Binds
     @Singleton
-    abstract fun provideBookNotesInteractor(todoInteractor: BookNotesInteractorImpl): BookNotesInteractor
+    abstract fun provideBookNotesInteractor(bookNotesInteractor: BookNotesInteractorImpl): BookNotesInteractor
 
     @Binds
     @Singleton

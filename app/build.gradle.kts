@@ -54,6 +54,7 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("com.android.volley:volley:1.2.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
@@ -105,6 +106,10 @@ dependencies {
     // Firestore
     implementation("com.google.firebase:firebase-firestore-ktx")
 
+    // Glide
+    implementation("com.github.bumptech.glide:compose:1.0.0-alpha.1")
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
     // Book Notes
 
     // Auth
@@ -112,6 +117,7 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:31.1.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
+
     // Auth
 
     api(project(":shared"))
