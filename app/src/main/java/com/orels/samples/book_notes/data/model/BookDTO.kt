@@ -5,12 +5,26 @@ import com.orels.samples.book_notes.domain.model.Book
 
 fun Book.toInsert(): Map<String, Any> = mapOf(
     "title" to title,
-    "isActive" to isActive
+    "isActive" to isActive,
+    "authors" to (authors ?: emptyList()),
+    "publishedDate" to (publishedDate ?: ""),
+    "description" to (description ?: ""),
+    "pageCount" to (pageCount ?: 0),
+    "categories" to (categories ?: emptyList()),
+    "smallThumbnail" to (smallThumbnail ?: ""),
+    "thumbnail" to (thumbnail ?: ""),
 )
 
 fun Book.toUpdate(): Map<String, Any> = mapOf(
     "title" to title,
-    "isActive" to isActive
+    "isActive" to isActive,
+    "authors" to (authors ?: emptyList()),
+    "publishedDate" to (publishedDate ?: ""),
+    "description" to (description ?: ""),
+    "pageCount" to (pageCount ?: 0),
+    "categories" to (categories ?: emptyList()),
+    "smallThumbnail" to (smallThumbnail ?: ""),
+    "thumbnail" to (thumbnail ?: ""),
 )
 
 fun Book.toDelete(): Map<String, Any> = mapOf(

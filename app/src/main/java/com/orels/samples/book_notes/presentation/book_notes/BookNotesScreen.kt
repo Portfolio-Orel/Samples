@@ -48,6 +48,13 @@ fun BookNotesScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
         Loading(size = 16.dp, width = 2.dp)
     } else {
         Box(contentAlignment = Alignment.TopCenter) {
+            Column {
+                BookNotesList(bookNotes = state.bookNoteItems, onDelete = { task ->
+                    viewModel.onBookNotesEvent(BookNoteEvent.RemoveBookNote(task))
+                }, onUpdate = { task ->
+                    viewModel.onBookNotesEvent(BookNoteEvent.UpdateBookNote(task))
+                })
+            }
             MultiFab(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
