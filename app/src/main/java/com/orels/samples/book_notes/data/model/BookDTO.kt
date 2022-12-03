@@ -19,6 +19,13 @@ fun Book.toDelete(): Map<String, Any> = mapOf(
 
 fun fromMapBook(map: Map<String, Any>, id: String): Book = Book(
     id = id,
-    title = map["title"] as String,
-    isActive = map["isActive"] as Boolean
+    title = map["title"] as? String ?: "",
+    authors = map["authors"] as? List<String> ?: emptyList(),
+    publishedDate = map["publishedDate"] as? String ?: "",
+    description = map["description"] as? String ?: "",
+    pageCount = map["pageCount"] as? Int ?: 0,
+    categories = map["categories"] as? List<String> ?: emptyList(),
+    smallThumbnail = map["smallThumbnail"] as? String ?: "",
+    thumbnail = map["thumbnail"] as? String ?: "",
+    isActive = map["isActive"] as? Boolean ?: true
 )

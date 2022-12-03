@@ -1,10 +1,7 @@
 package com.orels.samples.book_notes.data.remote
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.orels.samples.book_notes.data.model.fromMapBook
-import com.orels.samples.book_notes.data.model.toDelete
-import com.orels.samples.book_notes.data.model.toInsert
-import com.orels.samples.book_notes.data.model.toUpdate
+import com.orels.samples.book_notes.data.model.*
 import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.Books
 import com.orels.samples.book_notes.domain.repository.BooksRepository
@@ -13,7 +10,9 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class BooksRepositoryImpl @Inject constructor() : BooksRepository {
+class BooksRepositoryImpl @Inject constructor(
+    private val api: BooksAPI,
+) : BooksRepository {
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -121,4 +120,8 @@ class BooksRepositoryImpl @Inject constructor() : BooksRepository {
                     emitter.onError(exception)
                 }
         }
+
+    override fun searchBook(searchText: String): Single<BookSearchResult> =
+        api.searchBook(searchText)
+
 }

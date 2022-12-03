@@ -1,5 +1,6 @@
 package com.orels.samples.book_notes.domain.repository
 
+import com.orels.samples.book_notes.data.model.BookSearchResult
 import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.Books
 import io.reactivex.rxjava3.core.Completable
@@ -42,7 +43,16 @@ interface BooksRepository {
 
     /**
      * Deletes a book from the remote database
-     * @param book the book to delete
+     * @param book the book to delete\
+     * @author Orel Zilberman
      */
     fun delete(book: Book): Completable
+
+    /**
+     * Search a book with the searchText using Google Books API
+     * @param searchText the text to search
+     * @return a list of BookSearchResult
+     * @author Orel Zilberman
+     */
+    fun searchBook(searchText: String): Single<BookSearchResult>
 }

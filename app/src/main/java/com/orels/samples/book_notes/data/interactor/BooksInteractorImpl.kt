@@ -7,8 +7,10 @@ import com.orels.samples.book_notes.domain.model.Books
 import com.orels.samples.book_notes.domain.repository.BooksRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class BooksInteractorImpl @Inject constructor(
@@ -22,7 +24,8 @@ class BooksInteractorImpl @Inject constructor(
         .subscribeOn(Schedulers.io())
         .flatMap { books: List<Book> ->
             if (books.isEmpty()) {
-                repository.getAll().observeOn(Schedulers.io()).doOnSuccess { db.insert(it).subscribe() }
+                repository.getAll().observeOn(Schedulers.io())
+                    .doOnSuccess { db.insert(it).subscribe() }
                     .doOnError { Single.just(emptyList<Book>()) }
             } else {
                 Single.just(books)
@@ -45,7 +48,7 @@ class BooksInteractorImpl @Inject constructor(
             db.insert(book).observeOn(Schedulers.io()).subscribe()
         }.map { Result.success(book) }
 
-    override fun insert(books: Books): Single<Result<Books>> =repository.insert(books)
+    override fun insert(books: Books): Single<Result<Books>> = repository.insert(books)
         .subscribeOn(Schedulers.io())
         .observeOn(Schedulers.io())
         .doOnSuccess { ids ->
@@ -57,8 +60,22 @@ class BooksInteractorImpl @Inject constructor(
 
 
     override fun update(book: Book): Completable =
-        repository.update(book).observeOn(Schedulers.io()).doOnComplete { db.update(book).subscribe() }
+        repository.update(book).observeOn(Schedulers.io())
+            .doOnComplete { db.update(book).subscribe() }
 
     override fun delete(book: Book): Completable =
-        repository.delete(book).observeOn(Schedulers.io()).doOnComplete { db.delete(book).subscribe() }
+        repository.delete(book).observeOn(Schedulers.io())
+            .doOnComplete { db.delete(book).subscribe() }
+
+    override fun searchBook(searchText: String): Observable<Result<List<Book>>> =
+        repository.searchBook(searchText)
+            .toObservable()
+            .subscribeOn(Schedulers.io())
+            .debounce(300, TimeUnit.MILLISECONDS)
+            .observeOn(Schedulers.io())
+            .map {
+                Result.success(it.toBooks())
+            }
+            .onErrorReturn { Result.failure(it) }
+
 }

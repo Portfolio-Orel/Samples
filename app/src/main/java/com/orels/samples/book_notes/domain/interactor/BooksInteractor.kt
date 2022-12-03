@@ -4,6 +4,7 @@ import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.Books
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
 interface BooksInteractor {
@@ -45,4 +46,12 @@ interface BooksInteractor {
      * @param book the book to delete
      */
     fun delete(book: Book): Completable
+
+    /**
+     * Search a book with the searchText using Google Books API
+     * @param searchText the text to search
+     * @return a list of BookSearchResult
+     * @author Orel Zilberman
+     */
+    fun searchBook(searchText: String): Observable<Result<List<Book>>>
 }

@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.orels.components.Loading
@@ -18,6 +19,7 @@ import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.BookNote
 import com.orels.samples.book_notes.presentation.book_notes.component.AddBook
 import com.orels.samples.book_notes.presentation.book_notes.component.AddNewBookNote
+import com.orels.samples.book_notes.presentation.book_notes.component.search_box.SearchBookComponent
 import com.orels.samples.book_notes.presentation.book_notes.model.BookNotesItem
 import com.orels.samples.ui.multi_fab.MiniFloatingAction
 import com.orels.samples.ui.multi_fab.MultiFab
@@ -36,7 +38,7 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
                 ))
             },
             onDismiss = { shouldShowAddBookNote = false },
-            books = state.bookNoteItems.map { it.book ?: Book.Empty }
+            books = state.bookNoteItems.map { it.book ?: Book() }
         )
     }
     if (shouldShowAddBook) {
@@ -54,6 +56,9 @@ fun TodoScreen(viewModel: BookNotesViewModel = hiltViewModel()) {
                     viewModel.onBookNotesEvent(BookNoteEvent.UpdateBookNote(task))
                 })
             }
+            SearchBookComponent(onBookSelected = { book ->
+                viewModel.onBookEvent(BookEvent.AddBook(book))
+            })
             MultiFab(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -79,7 +84,7 @@ fun BookNotesList(
 ) {
     Column() {
         bookNotes.forEach { bookNotesItem ->
-            Text(text = bookNotesItem.book?.title ?: "Book",
+            Text(text = bookNotesItem.book?.title ?: stringResource(id = R.string.book),
                 style = MaterialTheme.typography.titleLarge)
             BookNoteItemComponent(bookNotesItem = bookNotesItem,
                 onDelete = onDelete,
@@ -98,7 +103,7 @@ fun BookNoteItemComponent(
         bookNotesItem.bookNotes.forEach {
             Row() {
                 Text(
-                    text = "X",
+                    text = stringResource(R.string.x_caps),
                     modifier = Modifier
                         .clickable {
                             onDelete(it)

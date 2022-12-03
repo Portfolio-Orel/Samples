@@ -3,9 +3,12 @@ package com.orels.samples.app.di
 import android.content.Context
 import androidx.room.Room
 import com.google.gson.Gson
-import com.orels.rx_weather.data.remote.API
-import com.orels.samples.app.annotation.BaseUrl
+import com.orels.rx_weather.data.remote.WeatherAPI
+import com.orels.samples.app.annotation.BaseUrlBooks
+import com.orels.samples.app.annotation.BaseUrlWeather
+import com.orels.samples.book_notes.data.interceptor.LogInterceptor
 import com.orels.samples.book_notes.data.local.LocalDatabase
+import com.orels.samples.book_notes.data.remote.BooksAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,16 +25,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    // RX_WEATHER
-    @Provides
-    @BaseUrl
-    fun provideBaseUrl(
-    ): String = "https://api.open-meteo.com/v1/forecast/"
-
+    // SHARED
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .retryOnConnectionFailure(true)
+        .addInterceptor(LogInterceptor())
         .connectTimeout(30L, TimeUnit.SECONDS)
         .readTimeout(30L, TimeUnit.SECONDS)
         .build()
@@ -41,27 +40,34 @@ object AppModule {
 
     @Provides
     fun providesRxAdapter(): RxJava3CallAdapterFactory = RxJava3CallAdapterFactory.create()
+    // SHARED
+
+    // RX_WEATHER
+    @Provides
+    @BaseUrlWeather
+    fun provideWeatherBaseUrl(
+    ): String = "https://www.api.open-meteo.com/v1/forecast/"
 
     @Provides
-    fun providesAPI(
+    fun providesWeatherAPI(
         rxAdapter: RxJava3CallAdapterFactory,
         okHttpClient: OkHttpClient,
         gson: Gson,
-        @BaseUrl url: String,
-    ): API =
+        @BaseUrlWeather url: String,
+    ): WeatherAPI =
         Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(rxAdapter)
             .baseUrl(url)
             .build()
-            .create(API::class.java)
+            .create(WeatherAPI::class.java)
     // RX_WEATHER
 
     // BookNotes
     @Provides
     @Singleton
-    fun provideLocalDatabase(
+    fun provideBooksLocalDatabase(
         @ApplicationContext context: Context,
     ): LocalDatabase = Room.databaseBuilder(
         context,
@@ -70,6 +76,26 @@ object AppModule {
     )
         .fallbackToDestructiveMigration()
         .build()
+
+    @Provides
+    @BaseUrlBooks
+    fun provideBooksBaseUrl(
+    ): String = "https://www.googleapis.com/"
+
+    @Provides
+    fun providesBooksAPI(
+        rxAdapter: RxJava3CallAdapterFactory,
+        okHttpClient: OkHttpClient,
+        gson: Gson,
+        @BaseUrlBooks url: String,
+    ): BooksAPI =
+        Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(rxAdapter)
+            .baseUrl(url)
+            .build()
+            .create(BooksAPI::class.java)
 
     // BookNotes
 }

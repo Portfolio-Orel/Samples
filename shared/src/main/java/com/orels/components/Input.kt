@@ -4,8 +4,8 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
 enum class InputType {
-    Text, Number
+    Text, Number, Password
 }
 
 @Composable
@@ -37,12 +37,11 @@ fun Input(
     minLines: Int = 1,
     maxLines: Int = 1,
     isError: Boolean = false,
-    isPassword: Boolean = false,
     shouldFocus: Boolean = false,
-    leadingIcon: @Composable (() -> Unit) = { },
     trailingIcon: @Composable (() -> Unit)? = null,
     onTextChange: (String) -> Unit = {},
     maxCharacters: Int? = null,
+    isLoading: Boolean = false,
 ) {
     val value = remember { mutableStateOf(defaultValue) }
     val passwordVisible = rememberSaveable { mutableStateOf(false) }
@@ -62,6 +61,12 @@ fun Input(
     }
 
     val inputModifier = if (shouldFocus) Modifier.focusRequester(focusRequester) else Modifier
+
+    val keyboardType = when (inputType) {
+        InputType.Text -> KeyboardType.Text
+        InputType.Number -> KeyboardType.Number
+        InputType.Password -> KeyboardType.Password
+    }
 
     Column(modifier = (maxCharacters?.let { modifier.width((it * widthPerCharacter).dp) }
         ?: modifier.fillMaxWidth())) {
@@ -86,7 +91,10 @@ fun Input(
                                 onTextChange(it)
                             }
                         }
-
+                        InputType.Password -> {
+                            value.value = it
+                            onTextChange(it)
+                        }
                     }
                 },
                 placeholder = {
@@ -94,14 +102,27 @@ fun Input(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
                 },
                 singleLine = maxLines == 1,
-                visualTransformation = if (isPassword && !passwordVisible.value) PasswordVisualTransformation() else VisualTransformation.None,
-                keyboardOptions = if (isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions(
-                    keyboardType = KeyboardType.Text),
-                trailingIcon = trailingIcon,
+                visualTransformation = if (inputType == InputType.Password
+                    && !passwordVisible.value
+                ) PasswordVisualTransformation() else VisualTransformation.None,
+                keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+                trailingIcon = {
+                    if (isLoading) Loading(color = MaterialTheme.colorScheme.onBackground,
+                        size = 8.dp,
+                        width = 1.dp) else {
+                        if (trailingIcon != null) {
+                            trailingIcon()
+                        } else {
+//                            PasswordIcon(passwordVisible = passwordVisible.value,
+//                                onClick = { passwordVisible.value = !passwordVisible.value })
+                        }
+                    }
+                },
                 isError = isError)
         }
     }
 }
+
 
 @Composable
 private fun PasswordIcon(
@@ -113,7 +134,7 @@ private fun PasswordIcon(
     val description =
         if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
 
-    IconButton(onClick = onClick) {
+    Button(onClick = onClick) {
         Icon(painter = image, description)
     }
 }

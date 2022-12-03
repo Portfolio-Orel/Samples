@@ -2,11 +2,13 @@ package com.orels.samples.book_notes.presentation.book_notes
 
 import com.orels.samples.book_notes.domain.model.Book
 import com.orels.samples.book_notes.domain.model.BookNote
+import com.orels.samples.book_notes.domain.model.Books
 import com.orels.samples.book_notes.presentation.book_notes.model.BookNotesItem
 
 data class BookNotesState(
     val isLoading: Boolean = false,
     val bookNoteItems: List<BookNotesItem> = emptyList(),
+    val searchResult: Books = emptyList(),
     val error: String = "",
 )
 

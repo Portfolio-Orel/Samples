@@ -23,10 +23,10 @@ fun BookNote.toDelete(): Map<String, Any> = mapOf(
 
 fun fromMapBookNote(map: Map<String, Any>, id: String): BookNote = BookNote(
     id = id,
-    bookId = map["bookId"] as String,
-    title = map["title"] as String,
+    bookId = map["bookId"] as? String ?: "",
+    title = map["title"] as? String ?: "",
     location = BookLocation().fromMap(map["location"] as? Map<String, Any> ?: emptyMap()),
-    isActive = map["isActive"] as Boolean
+    isActive = map["isActive"] as? Boolean ?: true
 )
 
 fun BookLocation.toInsert(): Map<String, Any> = mapOf(
