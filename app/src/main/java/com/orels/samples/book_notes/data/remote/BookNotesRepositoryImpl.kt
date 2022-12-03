@@ -19,7 +19,7 @@ class BookNotesRepositoryImpl @Inject constructor() : BookNotesRepository {
     override fun insert(bookNote: BookNote): Single<String> = // Insert a booknote to user's booknotes collection
         Single.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("bookNotes")
                 .add(bookNote.toInsert())
                 .addOnSuccessListener { documentReference ->
@@ -37,7 +37,7 @@ class BookNotesRepositoryImpl @Inject constructor() : BookNotesRepository {
             val bookNotesIds = mutableListOf<String>()
             for (bookNote in bookNotes) {
                 val bookNoteRef = db.collection("user")
-                    .document("orel")
+                    .document("orel_dev")
                     .collection("bookNotes")
                     .document()
                 batch.set(bookNoteRef, bookNote.toInsert())
@@ -55,7 +55,7 @@ class BookNotesRepositoryImpl @Inject constructor() : BookNotesRepository {
     override fun update(bookNote: BookNote): Completable =
         Completable.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("bookNotes")
                 .document(bookNote.id)
                 .update(bookNote.toUpdate())
@@ -70,7 +70,7 @@ class BookNotesRepositoryImpl @Inject constructor() : BookNotesRepository {
     override fun delete(bookNote: BookNote): Completable =
         Completable.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("bookNotes")
                 .document(bookNote.id)
                 .update(bookNote.toDelete())
@@ -85,7 +85,7 @@ class BookNotesRepositoryImpl @Inject constructor() : BookNotesRepository {
     override fun getAll(): Single<List<BookNote>> =
         Single.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("bookNotes")
                 .whereEqualTo("isActive", true)
                 .get()
@@ -104,7 +104,7 @@ class BookNotesRepositoryImpl @Inject constructor() : BookNotesRepository {
     override fun get(id: String): Single<BookNote> =
         Single.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("bookNotes")
                 .document(id)
                 .get()

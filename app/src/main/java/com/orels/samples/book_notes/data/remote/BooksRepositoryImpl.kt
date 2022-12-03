@@ -19,7 +19,7 @@ class BooksRepositoryImpl @Inject constructor(
     override fun getAll(): Single<Books> =
         Single.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("books")
                 .whereEqualTo("isActive", true)
                 .get()
@@ -38,7 +38,7 @@ class BooksRepositoryImpl @Inject constructor(
     override fun get(id: String): Maybe<Book> =
         Maybe.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("books")
                 .document(id)
                 .get()
@@ -60,7 +60,7 @@ class BooksRepositoryImpl @Inject constructor(
     override fun insert(book: Book): Single<String> =
         Single.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("books")
                 .add(book.toInsert())
                 .addOnSuccessListener { documentReference ->
@@ -76,7 +76,7 @@ class BooksRepositoryImpl @Inject constructor(
             val ids = mutableListOf<String>()
             for (book in books) {
                 db.collection("user")
-                    .document("orel")
+                    .document("orel_dev")
                     .collection("books")
                     .add(book.toInsert())
                     .addOnSuccessListener { documentReference ->
@@ -94,7 +94,7 @@ class BooksRepositoryImpl @Inject constructor(
     override fun update(book: Book): Completable =
         Completable.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("books")
                 .document(book.id)
                 .update(book.toUpdate())
@@ -109,7 +109,7 @@ class BooksRepositoryImpl @Inject constructor(
     override fun delete(book: Book): Completable =
         Completable.create { emitter ->
             db.collection("user")
-                .document("orel")
+                .document("orel_dev")
                 .collection("books")
                 .document(book.id)
                 .update(book.toDelete())
