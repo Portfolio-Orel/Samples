@@ -1,10 +1,7 @@
 package com.orels.samples.book_notes.presentation.book_notes
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -52,7 +49,7 @@ fun BookNotesScreen(viewModel: BookNotesViewModel = hiltViewModel(), navControll
     if (state.isLoading) {
         Loading(size = 16.dp, width = 2.dp)
     } else {
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top) {
             Box(contentAlignment = Alignment.TopCenter) {
                 BookNotesList(bookNotes = state.bookNoteItems, onDeleteBookNote = { task ->
                     viewModel.onBookNotesEvent(BookNoteEvent.RemoveBookNote(task))
@@ -61,10 +58,10 @@ fun BookNotesScreen(viewModel: BookNotesViewModel = hiltViewModel(), navControll
                 },
                     onRemoveBook = { viewModel.onBookEvent(BookEvent.RemoveBook(it)) })
             }
-            Box(contentAlignment = Alignment.BottomStart) {
+            Spacer(Modifier.weight(1f))
+            Box(contentAlignment = Alignment.Center) {
                 MultiFab(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
                         .padding(bottom = 40.dp),
                     miniFloatingActionButtons = listOf(MiniFloatingAction(
                         icon = R.drawable.ic_round_note,
@@ -87,7 +84,7 @@ fun BookNotesList(
     onUpdateBookNote: (BookNote) -> Unit,
     onRemoveBook: (Book) -> Unit,
 ) {
-    Column() {
+    Column {
         bookNotes.forEach { bookNotesItem ->
             BookRowComponent(book = bookNotesItem.book ?: Book(),
                 onAddBook = {},
@@ -106,9 +103,9 @@ fun BookNoteItemComponent(
     onDelete: (BookNote) -> Unit,
     onUpdate: (BookNote) -> Unit,
 ) {
-    Column() {
+    Column {
         bookNotesItem.bookNotes.forEach {
-            Row() {
+            Row {
                 Text(
                     text = stringResource(R.string.x_caps),
                     modifier = Modifier

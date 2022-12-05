@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -51,11 +51,26 @@ fun MultiFab(
 //        else MaterialTheme.colorScheme.secondary,
 //        animationSpec = tween(durationMillis = 250)
 //    )
-    Row(
+    Column(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start)
+        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.Bottom),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        miniFloatingActionButtons.forEachIndexed { index, it ->
+            MiniFloatingActionButton(
+                modifier = Modifier
+                    .graphicsLayer(
+                        alpha = alpha,
+                        scaleX = getScaleMini(state, itemsCount - index),
+                        scaleY = getScaleMini(state, itemsCount - index),
+                    ),
+                miniFloatingAction = it,
+                onClick = {
+                    state =
+                        if (state == MultiFabState.COLLAPSED) MultiFabState.EXPANDED else MultiFabState.COLLAPSED
+                }
+            )
+        }
         FloatingActionButton(
             modifier = Modifier
                 .graphicsLayer(
@@ -72,21 +87,6 @@ fun MultiFab(
             Icon(
                 painter = painterResource(id = icon),
                 contentDescription = stringResource(R.string.main_fab),
-            )
-        }
-        miniFloatingActionButtons.forEachIndexed { index, it ->
-            MiniFloatingActionButton(
-                modifier = Modifier
-                    .graphicsLayer(
-                        alpha = alpha,
-                        scaleX = getScaleMini(state, itemsCount - index),
-                        scaleY = getScaleMini(state, itemsCount - index),
-                    ),
-                miniFloatingAction = it,
-                onClick = {
-                    state =
-                        if (state == MultiFabState.COLLAPSED) MultiFabState.EXPANDED else MultiFabState.COLLAPSED
-                }
             )
         }
     }
