@@ -1,4 +1,4 @@
-package com.orels.samples.book_notes.presentation.book_notes.component
+package com.orels.samples.book_notes.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

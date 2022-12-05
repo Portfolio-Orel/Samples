@@ -1,4 +1,4 @@
-package com.orels.samples.book_notes.presentation.book_notes.component.search_box
+package com.orels.samples.book_notes.presentation.component.search_box
 
 import com.orels.samples.book_notes.domain.model.Books
 

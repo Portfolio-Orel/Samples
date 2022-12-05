@@ -84,6 +84,10 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // Navigation
+    implementation ("com.google.accompanist:accompanist-navigation-material:0.24.11-rc")
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.16.0")
+
     // Rx
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.squareup.retrofit2:adapter-rxjava3:2.9.0")

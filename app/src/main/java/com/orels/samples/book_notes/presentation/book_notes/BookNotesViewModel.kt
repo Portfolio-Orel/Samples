@@ -26,6 +26,8 @@ class BookNotesViewModel @Inject constructor(
         getData()
     }
 
+    fun initData() = getData()
+
     fun onBookNotesEvent(event: BookNoteEvent) {
         when (event) {
             is BookNoteEvent.AddBookNote -> addBookNotes(event.bookNote)
