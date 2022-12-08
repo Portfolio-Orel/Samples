@@ -12,20 +12,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ForgotPasswordViewModel @Inject constructor() : ViewModel() {
-    var state by mutableStateOf (ForgotPasswordState())
+    var state by mutableStateOf(ForgotPasswordState())
 
     fun onForgotPassword(username: String) {
-        state = state.copy(state = State.LoadingForgotPassword)
+        state = state.copy(state = State.ForgotPassword(true))
         viewModelScope.launch {
-            delay(1500)
-            state = state.copy(state = State.ResetPassword)
+            delay(300)
+            state = state.copy(state = State.ResetPassword(false))
         }
     }
 
     fun onResetPassword(code: String, password: String, confirmPassword: String) {
-        state = state.copy(state = State.LoadingResetPassword)
+        state = state.copy(state = State.ResetPassword(true))
         viewModelScope.launch {
-            delay(1500)
+            delay(300)
             state = state.copy(state = State.Done)
         }
     }

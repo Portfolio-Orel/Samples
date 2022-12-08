@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val authInteractor: AuthInteractor) : ViewModel() {
+class MainViewModel @Inject constructor(private val authInteractor: AuthInteractor) : ViewModel() {
     var state by mutableStateOf(LoginState())
         private set
 

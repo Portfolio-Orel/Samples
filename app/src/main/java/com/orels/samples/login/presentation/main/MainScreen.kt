@@ -13,13 +13,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.orels.extension.noRippleClickable
 import com.orels.samples.R
+import com.orels.samples.login.presentation.LoginScreens
 import com.orels.samples.login.presentation.components.AuthenticationInput
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
+fun MainScreen(
+    navController: NavController,
+    viewModel: MainViewModel = hiltViewModel(),
 ) {
     Column(
         modifier = Modifier
@@ -56,8 +59,8 @@ fun LoginScreen(
         Text(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .noRippleClickable { },
-            text = stringResource(R.string.forgot_password),
+                .noRippleClickable { navController.navigate(LoginScreens.ForgotPassword.route) },
+            text = stringResource(R.string.did_forget_password),
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.SemiBold,
         )

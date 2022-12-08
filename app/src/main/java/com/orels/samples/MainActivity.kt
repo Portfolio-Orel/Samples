@@ -16,7 +16,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.orels.samples.login.presentation.forgot_password.ForgotPasswordScreen
+import com.orels.samples.login.presentation.LoginScreen
 import com.orels.samples.ui.theme.SamplesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -61,8 +61,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    WeatherScreen()
 //                    BookNotesMain()
-//                    LoginScreen()
-                    ForgotPasswordScreen()
+                    LoginScreen()
                 }
 
             }
