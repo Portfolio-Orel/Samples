@@ -43,8 +43,6 @@ fun MainScreen(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             placeholder = stringResource(R.string.username),
-            paddingLeadingIconEnd = 10.dp,
-            paddingTrailingIconStart = 10.dp,
             onValueChange = {}
         )
         AuthenticationInput(
@@ -52,9 +50,8 @@ fun MainScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             placeholder = stringResource(R.string.password),
-            paddingLeadingIconEnd = 10.dp,
-            paddingTrailingIconStart = 10.dp,
-            onValueChange = {}
+            onValueChange = {},
+            isPassword = true,
         )
         Text(
             modifier = Modifier

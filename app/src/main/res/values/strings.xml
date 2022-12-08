@@ -42,4 +42,6 @@
     <string name="done_exclamation">Done!</string>
     <string name="your_password_has_been_changed">Your password has been changed</string>
     <string name="lets_go">Let\'s go</string>
+    <string name="hide_password">hide password</string>
+    <string name="show_password">show password</string>
 </resources>

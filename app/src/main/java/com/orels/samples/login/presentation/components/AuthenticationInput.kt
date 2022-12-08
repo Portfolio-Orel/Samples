@@ -7,13 +7,16 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.VisualTransformation
+import com.orels.samples.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,13 +27,14 @@ fun AuthenticationInput(
     maxLines: Int = 1,
     minLines: Int = 1,
     value: String = "",
-    paddingLeadingIconEnd: Dp = 0.dp,
-    paddingTrailingIconStart: Dp = 0.dp,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     onDone: KeyboardActionScope.() -> Unit = {},
+    isPassword: Boolean = false,
 ) {
     var text by remember { mutableStateOf(value) }
+    val passwordVisible = rememberSaveable { mutableStateOf(false) }
+
     Row(modifier = modifier) {
         OutlinedTextField(
             modifier = Modifier
@@ -43,11 +47,15 @@ fun AuthenticationInput(
                 },
             value = text,
             onValueChange = {
-                val value = it.stripSpacesTabsAndNewLines()
-                text = value
-                onValueChange(it)
+                val strippedText = it.stripSpacesTabsAndNewLines()
+                text = strippedText
+                onValueChange(strippedText)
             },
             keyboardActions = KeyboardActions(onDone = onDone),
+            visualTransformation = if (isPassword && !passwordVisible.value) PasswordVisualTransformation() else VisualTransformation.None,
+            keyboardOptions = if (isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions(
+                keyboardType = KeyboardType.Text
+            ),
             placeholder = {
                 Text(
                     text = placeholder,
@@ -68,32 +76,33 @@ fun AuthenticationInput(
                 focusedLabelColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
             ),
             leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
+            trailingIcon = {
+                if (isPassword) {
+                    PasswordIcon(
+                        passwordVisible = passwordVisible.value,
+                        onClick = { passwordVisible.value = !passwordVisible.value })
+                } else {
+                    trailingIcon?.invoke()
+                }
+            },
         )
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordInput(
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    defaultValue: String,
+private fun PasswordIcon(
+    passwordVisible: Boolean,
+    onClick: () -> Unit,
 ) {
-    var password by remember { mutableStateOf(defaultValue) }
+    val image = if (passwordVisible)
+        painterResource(id = R.drawable.ic_visibility_off_24)
+    else painterResource(id = R.drawable.ic_visibility_24)
+    val description =
+        if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
 
-    TextField(
-        value = password,
-        onValueChange = {
-            val value = it.stripSpacesTabsAndNewLines()
-            password = value
-            onValueChange(value)
-        },
-        label = { Text(placeholder) },
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-    )
+    IconButton(onClick = onClick) {
+        Icon(painter = image, description)
+    }
 }
 
 private fun String.stripSpacesTabsAndNewLines(): String =

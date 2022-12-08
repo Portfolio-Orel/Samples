@@ -136,8 +136,6 @@ fun ForgotPasswordContent(
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             placeholder = stringResource(R.string.username),
             value = username,
-            paddingLeadingIconEnd = 10.dp,
-            paddingTrailingIconStart = 10.dp,
             onValueChange = { if (!isLoading) onUsernameChange(it) },
         )
         Button(
@@ -201,8 +199,6 @@ fun ResetPasswordContent(
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             placeholder = stringResource(R.string.code),
             value = code,
-            paddingLeadingIconEnd = 10.dp,
-            paddingTrailingIconStart = 10.dp,
             onValueChange = { if (!isLoading) onCodeChange(it) }
         )
 
@@ -211,18 +207,16 @@ fun ResetPasswordContent(
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             placeholder = stringResource(R.string.password),
             value = password,
-            paddingLeadingIconEnd = 10.dp,
-            paddingTrailingIconStart = 10.dp,
-            onValueChange = { if (!isLoading) onPasswordChange(it) }
+            onValueChange = { if (!isLoading) onPasswordChange(it) },
+            isPassword = true
         )
         AuthenticationInput(
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             placeholder = stringResource(R.string.confirm_password),
             value = confirmPassword,
-            paddingLeadingIconEnd = 10.dp,
-            paddingTrailingIconStart = 10.dp,
-            onValueChange = { if (!isLoading) onConfirmPasswordChange(it) }
+            onValueChange = { if (!isLoading) onConfirmPasswordChange(it) },
+            isPassword = true
         )
         Button(
             modifier = Modifier
