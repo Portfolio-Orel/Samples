@@ -16,7 +16,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.orels.samples.book_notes.presentation.BookNotesMain
+import com.orels.samples.login.presentation.main.LoginScreen
 import com.orels.samples.ui.theme.SamplesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,8 +60,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    WeatherScreen()
-                BookNotesMain()
+//                    BookNotesMain()
+                    LoginScreen()
                 }
+
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.orels.components
+package com.orels.extension
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

@@ -10,6 +10,8 @@ import com.orels.samples.book_notes.domain.interactor.BookNotesInteractor
 import com.orels.samples.book_notes.domain.interactor.BooksInteractor
 import com.orels.samples.book_notes.domain.repository.BookNotesRepository
 import com.orels.samples.book_notes.domain.repository.BooksRepository
+import com.orels.samples.login.data.local.AuthInteractorImpl
+import com.orels.samples.login.model.interactor.AuthInteractor
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -42,4 +44,10 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun provideBooksInteractor(booksInteractor: BooksInteractorImpl): BooksInteractor
     // BookNotes
+
+    // Login
+    @Binds
+    @Singleton
+    abstract fun provideAuthInteractor(authInteractor: AuthInteractorImpl): AuthInteractor
+    // Login
 }
